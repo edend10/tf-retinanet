@@ -6,7 +6,7 @@ backbone:
     freeze: true
 
 callbacks:
-  snapshots_path: tutorial/snapshots_train
+  snapshots_path: ../tutorial/snapshots_train
   project_name: tf_retinanet
   lr_scheduler: False
   optimizer: nadam
