@@ -40,30 +40,50 @@ from ..utils.eval    import evaluate
 
 
 def parse_args(args):
-	""" Parse the command line arguments.
-	"""
-	parser = argparse.ArgumentParser(description='Simple training script for training a RetinaNet network.')
+        """ Parse the command line arguments.
+        """
+        parser = argparse.ArgumentParser(description='Simple training script for training a RetinaNet network.')
 
-	parser.add_argument('--config',    help='Config file.', default=None,        type=str)
-	parser.add_argument('--backbone',  help='Backbone model used by retinanet.', type=str)
-	parser.add_argument('--generator', help='Generator used by retinanet.',      type=str)
+        parser.add_argument('--config',    help='Config file.', default=None,        type=str)
+        parser.add_argument('--backbone',  help='Backbone model used by retinanet.', type=str)
+        parser.add_argument('--generator', help='Generator used by retinanet.',      type=str)
+        # CSV datatype generator config
+        subparsers = parser.add_subparsers(
+            help="Arguments for specific dataset types.", 
+            dest="dataset_type"
+        )
+        subparsers.required = False
+        csv_parser = subparsers.add_parser("csv")
+        csv_parser.add_argument(
+            "test_annotations",
+            help="Path to CSV file containing annotations for training.",
+            default="../data/annotations.csv",
+            type=str
+        )
 
-	# Generator config.
-	parser.add_argument('--image-min-side', help='Rescale the image so the smallest side is min_side.',            type=int)
-	parser.add_argument('--image-max-side', help='Rescale the image if the largest side is larger than max_side.', type=int)
+        csv_parser.add_argument(
+            "test_classes", 
+            help="Path to a CSV file containing class label mapping.",
+            default="../data/classes.csv",
+            type=str
+        )
 
-	# Evaluate config.
-	parser.add_argument('--convert-model',   help='Convert the model to an inference model (ie. the input is a training model).', action='store_true')
-	parser.add_argument('--gpu',             help='Id of the GPU to use (as reported by nvidia-smi), -1 to run on cpu.', type=int)
-	parser.add_argument('--score-threshold', help='Threshold on score to filter detections with (defaults to 0.05).',    type=float)
-	parser.add_argument('--iou-threshold',   help='IoU Threshold to count for a positive detection (defaults to 0.5).',  type=float)
-	parser.add_argument('--max-detections',  help='Max Detections per image (defaults to 100).',                         type=int)
-	parser.add_argument('--save-path',       help='Path for saving images with detections (doesn\'t work for COCO).',    default=None, type=str)
+        # Generator config.
+        parser.add_argument('--image-min-side', help='Rescale the image so the smallest side is min_side.',            type=int)
+        parser.add_argument('--image-max-side', help='Rescale the image if the largest side is larger than max_side.', type=int)
 
-	# Additional config.
-	parser.add_argument('-o', help='Additional config.',action='append', nargs=1)
+        # Evaluate config.
+        parser.add_argument('--convert-model',   help='Convert the model to an inference model (ie. the input is a training model).', action='store_true', default=True)
+        parser.add_argument('--gpu',             help='Id of the GPU to use (as reported by nvidia-smi), -1 to run on cpu.', type=int)
+        parser.add_argument('--score-threshold', help='Threshold on score to filter detections with (defaults to 0.05).',    type=float)
+        parser.add_argument('--iou-threshold',   help='IoU Threshold to count for a positive detection (defaults to 0.5).',  type=float)
+        parser.add_argument('--max-detections',  help='Max Detections per image (defaults to 100).',                         type=int)
+        parser.add_argument('--save-path',       help='Path for saving images with detections (doesn\'t work for COCO).',    default=None, type=str)
 
-	return parser.parse_args(args)
+        # Additional config.
+        parser.add_argument('-o', help='Additional config.',action='append', nargs=1)
+
+        return parser.parse_args(args)
 
 
 def main(args=None):

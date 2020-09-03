@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
+from comet_ml import Experiment
 import argparse
 import os
 import sys
@@ -83,6 +83,18 @@ def parse_args(args):
         default="none",
         type=str
     )
+
+    parser.add_argument(
+        "--comet-api-key",
+        help='comet api key',
+        type=str
+    )
+    parser.add_argument(
+        "--comet-ws",
+        help='comet workspace',
+        type=str
+    )
+
     parser.add_argument(
         "--shuffle_groups",
         help="If True, shuffles the groups each epoch.",
@@ -199,7 +211,7 @@ def parse_args(args):
         "--earlystopping",
         help="Enable EarlyStopping while training",
         action="store_true",
-        default=True
+        default=False
     )
     parser.add_argument(
         "--earlystopping_patience",
@@ -249,6 +261,13 @@ def main(args=None):
     if args is None:
         args = sys.argv[1:]
     args = parse_args(args)
+
+    if args.comet_api_key and args.comet_ws:
+        experiment = Experiment(api_key=args.comet_api_key,
+            project_name="lool-ocr-object-detection", workspace=args.comet_ws)
+        experiment.add_tag('tutorial')
+    else:
+        print('no comet args')
 
     # Parse command line and configuration file settings.
     config = make_training_config(args)
@@ -367,7 +386,7 @@ def main(args=None):
     )
 
     # Save the model
-    os.makedirs(model_path)
+    os.makedirs(model_path, exists_ok=True)
     training_model.save(model_path+'/model_v2.h5')
 
     print('Done training for now.')

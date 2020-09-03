@@ -44,6 +44,7 @@ def parse_args(args):
 	parser.add_argument('model_in',                   help='The model to convert.')
 	parser.add_argument('model_out',                  help='Path to save the converted model to.')
 	parser.add_argument('--config',                   help='Config file.', default=None, type=str)
+	parser.add_argument('--generator',                   help='Generator.', default=None, type=str)
 	parser.add_argument('--backbone',                 help='The backbone of the model to convert.')
 	parser.add_argument('--no-nms',                   help='Disables non maximum suppression.',  dest='nms',                   action='store_false')
 	parser.add_argument('--no-class-specific-filter', help='Disables class specific filtering.', dest='class_specific_filter', action='store_false')
@@ -100,6 +101,8 @@ def main(args=None, config=None):
 	)
 
 	# Save model.
+        os.makedirs(args.model_out, exists_ok=True)
+
 	if not args.savedmodel:
 		model.save(args.model_out)
 	elif args.savedmodel:

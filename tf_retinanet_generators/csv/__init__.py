@@ -46,15 +46,15 @@ def from_config(config, submodels_manager, preprocess_image, **kwargs):
     config = set_defaults(config, default_config)
 
     # If no annotations dir is set, ask the user for it.
-    if ("train_annotations_path" not in config) or not config["train_annotations_path"]:
-        config["train_annotations_path"] = input(
-            "Please input the train annotations CSV folder:"
-        )
-    if ("train_classes_path" not in config) or not config["train_classes_path"]:
-        config["train_classes_path"] = input(
-            "Please input the train classes CSV folder:"
-        )
-
+#    if ("train_annotations_path" not in config) or not config["train_annotations_path"]:
+#        config["train_annotations_path"] = input(
+#            "Please input the train annotations CSV folder:"
+#        )
+#    if ("train_classes_path" not in config) or not config["train_classes_path"]:
+#        config["train_classes_path"] = input(
+#            "Please input the train classes CSV folder:"
+#        )
+#
     generators = {}
 
     # We should get the number of classes from the generators.
@@ -93,9 +93,16 @@ def from_config(config, submodels_manager, preprocess_image, **kwargs):
     config["visual_effect_generator_class"] = None
 
     # Set up the submodels for this generator.
-    assert generators["train"].num_classes != 0, "Got 0 classes from CSV generator."
+    if "train" in generators.keys():
+        assert generators["train"].num_classes != 0, "Got 0 classes from CSV generator."
 
-    # Instantiate the submodels for this generator.
-    submodels_manager.create(num_classes=generators["train"].num_classes())
+        # Instantiate the submodels for this generator.
+        submodels_manager.create(num_classes=generators["train"].num_classes())
+
+    else:
+        assert generators["test"].num_classes != 0, "Got 0 classes from CSV generator."
+        
+        # Instantiate the submodels for this generator.
+        submodels_manager.create(num_classes=generators["test"].num_classes())
 
     return generators, submodels_manager.get_submodels()

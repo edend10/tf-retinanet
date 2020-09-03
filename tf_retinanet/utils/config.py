@@ -156,10 +156,11 @@ def make_training_config(args):
         config["generator"]["details"]["image_min_side"] = args.image_min_side
     if args.image_max_side:
         config["generator"]["details"]["image_max_side"] = args.image_max_side
-    if args.train_annotations:
-        config["generator"]["details"]["train_annotations_path"] = args.train_annotations
-    if args.train_classes:
-        config["generator"]["details"]["train_classes_path"] = args.train_classes
+    if args.generator:
+        if args.train_annotations:
+            config["generator"]["details"]["train_annotations_path"] = args.train_annotations
+        if args.train_classes:
+            config["generator"]["details"]["train_classes_path"] = args.train_classes
 
     # Train config.
     if args.gpu:
@@ -240,6 +241,11 @@ def make_evaluation_config(args):
         config["evaluate"]["iou_threshold"] = args.iou_threshold
     if args.max_detections:
         config["evaluate"]["max_detections"] = args.max_detections
+
+    if args.test_annotations:
+        config["generator"]["details"]["test_annotations_path"] = args.test_annotations
+    if args.test_classes:
+        config["generator"]["details"]["test_classes_path"] = args.test_classes
 
     return config
 
