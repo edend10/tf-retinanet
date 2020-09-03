@@ -386,7 +386,7 @@ def main(args=None):
     )
 
     # Save the model
-    os.makedirs(model_path, exists_ok=True)
+    os.makedirs(model_path, exist_ok=True)
     training_model.save(model_path+'/model_v2.h5')
 
     print('Done training for now.')

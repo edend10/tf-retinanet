@@ -7,7 +7,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,9 +25,9 @@ import tensorflow as tf
 
 # Allow relative imports when being executed as script.
 if __name__ == "__main__" and __package__ is None:
-	sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
-	import tf_retinanet.bin  # noqa: F401
-	__package__ = "tf_retinanet.bin"
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+        import tf_retinanet.bin  # noqa: F401
+        __package__ = "tf_retinanet.bin"
 
 
 from ..              import models
@@ -73,7 +73,7 @@ def parse_args(args):
         parser.add_argument('--image-max-side', help='Rescale the image if the largest side is larger than max_side.', type=int)
 
         # Evaluate config.
-        parser.add_argument('--convert-model',   help='Convert the model to an inference model (ie. the input is a training model).', action='store_true', default=True)
+        parser.add_argument('--convert-model',   help='Convert the model to an inference model (ie. the input is a training model).', action='store_true', default=False)
         parser.add_argument('--gpu',             help='Id of the GPU to use (as reported by nvidia-smi), -1 to run on cpu.', type=int)
         parser.add_argument('--score-threshold', help='Threshold on score to filter detections with (defaults to 0.05).',    type=float)
         parser.add_argument('--iou-threshold',   help='IoU Threshold to count for a positive detection (defaults to 0.5).',  type=float)
@@ -87,68 +87,71 @@ def parse_args(args):
 
 
 def main(args=None):
-	# Parse command line arguments.
-	if args is None:
-		args = sys.argv[1:]
-	args = parse_args(args)
+        # Parse command line arguments.
+        if args is None:
+                args = sys.argv[1:]
+        args = parse_args(args)
 
-	# Parse command line and configuration file settings.
-	config = make_evaluation_config(args)
+        # Parse command line and configuration file settings.
+        config = make_evaluation_config(args)
 
-	# Set gpu configuration.
-	setup_gpu(config['evaluate']['gpu'])
+        # Set gpu configuration.
+        setup_gpu(config['evaluate']['gpu'])
 
-	# Get the submodels manager.
-	submodels_manager = models.submodels.SubmodelsManager(config['submodels'])
+        # Get the submodels manager.
+        submodels_manager = models.submodels.SubmodelsManager(config['submodels'])
 
-	# Get the backbone.
-	backbone = get_backbone(config['backbone'])
+        # Get the backbone.
+        backbone = get_backbone(config['backbone'])
 
-	# Get generators and submodels.
-	generators, submodels = get_generators(
-		config['generator'],
-		submodels_manager,
-		preprocess_image=backbone.preprocess_image
-	)
+        # Get generators and submodels.
+        generators, submodels = get_generators(
+                config['generator'],
+                submodels_manager,
+                preprocess_image=backbone.preprocess_image
+        )
 
-	# Get test generator.
-	if 'test' not in generators:
-		raise ValueError('Could not get test generator.')
-	test_generator = generators['test']
+        # Get test generator.
+        if 'test' not in generators:
+                raise ValueError('Could not get test generator.')
+        test_generator = generators['test']
 
-	# Get evaluation procedure.
-	if 'evaluation_procedure' not in generators:
-		print('Generator-specific evaluation not implemented, standard evaluate function will be used.')
-		evaluation = evaluate
-	else:
-		evaluation = generators['evaluation_procedure']
+        # Get evaluation procedure.
+        if 'evaluation_procedure' not in generators:
+                print('Generator-specific evaluation not implemented, standard evaluate function will be used.')
+                evaluation = evaluate
+        else:
+                evaluation = generators['evaluation_procedure']
 
-	# Load model.
-	if config['evaluate']['weights'] is None:
-		raise ValueError('Could not get weights.')
-	model = models.load_model(config['evaluate']['weights'], backbone=backbone, submodels=submodels)
+        # Load model.
+        if config['evaluate']['weights'] is None:
+                raise ValueError('Could not get weights.')
+        model = models.load_model(config['evaluate']['weights'], backbone=backbone, submodels=submodels)
 
-	# Create prediction model.
-	if config['evaluate']['convert_model']:
-		# Optionally load anchors parameters.
-		anchor_params = None
-		if 'anchors' in config['generator']['details']:
-			anchor_params = parse_anchor_parameters(config['generator']['details']['anchors'])
+        # Create prediction model.
+        if config['evaluate']['convert_model']:
+                # Optionally load anchors parameters.
+                anchor_params = None
+                if 'anchors' in config['generator']['details']:
+                        anchor_params = parse_anchor_parameters(config['generator']['details']['anchors'])
 
-		model = models.retinanet.convert_model(model, anchor_params=anchor_params)
+                model = models.retinanet.convert_model(model, anchor_params=anchor_params)
 
-	if config['generator']['name'] == 'coco':
-		evaluation(test_generator, model)
-	else:
-		evaluation(
-			test_generator,
-			model,
-			iou_threshold=config["evaluate"]["iou_threshold"],
-			score_threshold=config["evaluate"]["score_threshold"],
-			max_detections=config["evaluate"]["max_detections"],
-			save_path=args.save_path
-		)
+        if args.save_path is not None:
+            os.makedirs(args.save_path, exist_ok=True)
+
+        if config['generator']['name'] == 'coco':
+                evaluation(test_generator, model)
+        else:
+                evaluation(
+                        test_generator,
+                        model,
+                        iou_threshold=config["evaluate"]["iou_threshold"],
+                        score_threshold=config["evaluate"]["score_threshold"],
+                        max_detections=config["evaluate"]["max_detections"],
+                        save_path=args.save_path
+                )
 
 
 if __name__ == '__main__':
-	main()
+        main()

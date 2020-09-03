@@ -12,8 +12,7 @@ callbacks:
   optimizer: nadam
 
 evaluate:
-  weights: ../tutorial/snapshots_train/tf_retinanet
-
+  weights: ../tutorial/saved_models/2
 
 generator:
   name: csv

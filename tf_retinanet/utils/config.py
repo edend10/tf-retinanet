@@ -242,10 +242,11 @@ def make_evaluation_config(args):
     if args.max_detections:
         config["evaluate"]["max_detections"] = args.max_detections
 
-    if args.test_annotations:
-        config["generator"]["details"]["test_annotations_path"] = args.test_annotations
-    if args.test_classes:
-        config["generator"]["details"]["test_classes_path"] = args.test_classes
+    if args.generator:
+        if args.test_annotations:
+            config["generator"]["details"]["test_annotations_path"] = args.test_annotations
+        if args.test_classes:
+            config["generator"]["details"]["test_classes_path"] = args.test_classes
 
     return config
 
