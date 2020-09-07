@@ -1,11 +1,11 @@
+*.swp
+*.swo
 __pycache__/
 *.pyc
 *.c
 *.so
 /.pytest_cache
 /.cache
-*.swp
-*.swo
 *~
 [._]*.s[a-w][a-z]
 [._]s[a-w][a-z]

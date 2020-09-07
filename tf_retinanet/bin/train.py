@@ -94,6 +94,7 @@ def parse_args(args):
         help='comet workspace',
         type=str
     )
+    parser.add_argument('--comet-tags', nargs='+', help='comet tags')
 
     parser.add_argument(
         "--shuffle_groups",
@@ -265,7 +266,8 @@ def main(args=None):
     if args.comet_api_key and args.comet_ws:
         experiment = Experiment(api_key=args.comet_api_key,
             project_name="lool-ocr-object-detection", workspace=args.comet_ws)
-        experiment.add_tag('tutorial')
+        if comet_tags is not None:
+            experiment.add_tags(args.comet_tags)
     else:
         print('no comet args')
 
