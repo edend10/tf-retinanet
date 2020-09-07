@@ -6,19 +6,19 @@ backbone:
     freeze: true
 
 callbacks:
-  snapshots_path: ../tutorial/snapshots_train
+  snapshots_path: results/tutorial/snapshots_train
   project_name: tf_retinanet
   lr_scheduler: False
   optimizer: nadam
 
 evaluate:
-  weights: ../tutorial/saved_models/1
+  weights: results/tutorial/saved_models/1
 
 generator:
   name: csv
   details:
      transform_generator: basic
-     train_annotations_path: tutorial/train_annotations.csv
-     train_classes_path: tutorial/classes.csv
-     test_annotations_path: tutorial/test_annotations.csv
-     test_classes_path: tutorial/classes.csv
+     train_annotations_path: datasets/tutorial/train_annotations.csv
+     train_classes_path: datasets/tutorial/classes.csv
+     test_annotations_path: datasets/tutorial/test_annotations.csv
+     test_classes_path: datasets/tutorial/classes.csv
