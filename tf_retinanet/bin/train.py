@@ -266,7 +266,7 @@ def main(args=None):
     if args.comet_api_key and args.comet_ws:
         experiment = Experiment(api_key=args.comet_api_key,
             project_name="lool-ocr-object-detection", workspace=args.comet_ws)
-        if comet_tags is not None:
+        if args.comet_tags is not None:
             experiment.add_tags(args.comet_tags)
     else:
         print('no comet args')
