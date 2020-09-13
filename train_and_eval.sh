@@ -24,5 +24,5 @@ for i in $(seq 10 5 $EPOCHS); do
 
     echo "--${i}--" >> eval_logs.txt
 
-    python tf_retinanet/bin/evaluate.py --save-path=results/${DATASET_NAME}/test_results --config=conf/${DATASET_NAME}.yaml | grep mAP: >> eval_logs.txt
+    python tf_retinanet/bin/evaluate.py --save-path=results/${DATASET_NAME}/test_results --config=conf/${DATASET_NAME}.yaml --eval-epoch=$i | grep mAP: >> eval_logs.txt
 done
