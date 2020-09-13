@@ -7,8 +7,8 @@ COMET_API_KEY=$4
 python tf_retinanet/bin/train.py --config conf/${DATASET_NAME}.yaml --freeze-backbone \
     --random-transform \
     --batch-size 8 \
-    --steps 79 \
-    --epochs 10 \
+    --steps $STEPS \
+    --epochs $EPOCHS \
     --comet-ws edolev89 \
     --comet-tags ds:${DATASET_NAME}
 
