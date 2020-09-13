@@ -1,3 +1,5 @@
+set -e
+
 DATASET_NAME=$1
 EPOCHS=$2
 STEPS=$3
@@ -12,7 +14,7 @@ python tf_retinanet/bin/train.py --config conf/${DATASET_NAME}.yaml --freeze-bac
     --comet-ws edolev89 \
     --comet-tags ds:${DATASET_NAME}
 
-COMET_EXPERIMENT_KEY=$(cat /tmp/comet_exp_key.txt)
+export COMET_EXPERIMENT_KEY=$(cat /tmp/comet_exp_key.txt)
 
 echo '' > eval_logs.txt
 for i in $(seq 10 5 $EPOCHS); do
