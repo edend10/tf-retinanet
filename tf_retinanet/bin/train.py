@@ -263,9 +263,7 @@ def main(args=None):
         args = sys.argv[1:]
     args = parse_args(args)
 
-    if os.environ.get('COMET_API_KEY') is not None:
-
-    comet_api_key = args.comet_api_key or os.environ.get('COMET_API_KEY'))
+    comet_api_key = args.comet_api_key or os.environ.get('COMET_API_KEY')
 
     if comet_api_key and args.comet_ws:
         experiment = Experiment(api_key=comet_api_key,

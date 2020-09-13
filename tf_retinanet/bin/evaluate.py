@@ -20,6 +20,7 @@ import argparse
 import os
 import sys
 
+from comet_ml import ExistingExperiment
 import tensorflow as tf
 
 
@@ -144,6 +145,9 @@ def main(args=None):
         if config['generator']['name'] == 'coco':
                 evaluation(test_generator, model)
         else:
+                experiment = None
+                if args.eval_epoch is not None and os.environ.get('COMET_API_KEY') and os.environ.get('COMET_EXPERIMENT_KEY'):
+                    experiment = ExistingExperiment()
                 evaluation(
                         test_generator,
                         model,
@@ -151,7 +155,8 @@ def main(args=None):
                         score_threshold=config["evaluate"]["score_threshold"],
                         max_detections=config["evaluate"]["max_detections"],
                         save_path=args.save_path,
-                        eval_epoch=args.eval_epoch
+                        eval_epoch=args.eval_epoch,
+                        experiment=experiment
                 )
 
 

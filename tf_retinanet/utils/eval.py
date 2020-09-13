@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from comet_ml import ExistingExperiment
 from .anchors import compute_overlap
 from .visualization import draw_detections, draw_annotations
 
@@ -146,7 +145,7 @@ def _get_annotations(generator):
     return all_annotations
 
 
-def print_results(generator, average_precisions, inference_time, eval_epoch):
+def print_results(generator, average_precisions, inference_time, eval_epoch, experiment):
     """ Print evaluation results.
     # Arguments
         generator         : The generator that represents the dataset to evaluate.
@@ -171,8 +170,7 @@ def print_results(generator, average_precisions, inference_time, eval_epoch):
     mAP = sum(precisions) / sum(x > 0 for x in total_instances)
     print('mAP: {:.4f}'.format(mAP))
         
-    if eval_epoch is not None and os.environ.get('COMET_API_KEY') and os.environ.get('COMET_EXPERIMENT_KEY'):
-        exp = ExistingExperiment()
+    if experiment and eval_epoch is not None:
         exp.log_metric('eval_mAP', mAP, epoch=eval_epoch)
 
 
@@ -183,7 +181,8 @@ def evaluate(
     score_threshold=0.05,
     max_detections=100,
     save_path=None,
-        eval_epoch=None
+    eval_epoch=None,
+    experiment=None
 ):
     """ Evaluate a given dataset using a given model.
     # Arguments
@@ -266,4 +265,4 @@ def evaluate(
 
         inference_time = np.sum(all_inferences) / generator.size()
 
-    print_results(generator, average_precisions, inference_time, eval_epoch)
+    print_results(generator, average_precisions, inference_time, eval_epoch, experiment)
