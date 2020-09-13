@@ -34,8 +34,8 @@ default_callbacks_config = {
 
 
 default_anchors_config = {
-	'sizes'   : [16, 32, 64, 128, 256],
-	'strides' : [4, 8, 16, 32, 64],
+	'sizes'   : [16, 32, 64, 128, 256, 512],
+	'strides' : [8, 16, 32, 64, 128],
         'ratios'  : [0.25, 1.0, 4.0],
         'scales'  : [0.851, 1.036, 1.375],
 }
