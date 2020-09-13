@@ -24,6 +24,9 @@ import time
 
 import cv2
 import progressbar
+
+from comet_ml import ExistingExperiment
+
 assert(callable(progressbar.progressbar)), "Using wrong progressbar module, install 'progressbar2' instead."
 
 
@@ -144,7 +147,7 @@ def _get_annotations(generator):
 	return all_annotations
 
 
-def print_results(generator, average_precisions, inference_time):
+def print_results(generator, average_precisions, inference_time, eval_epoch):
 	""" Print evaluation results.
 	# Arguments
 		generator         : The generator that represents the dataset to evaluate.
@@ -166,7 +169,12 @@ def print_results(generator, average_precisions, inference_time):
 
 	print('Inference time for {:.0f} images: {:.4f}'.format(generator.size(), inference_time))
 	print('mAP using the weighted average of precisions among classes: {:.4f}'.format(sum([a * b for a, b in zip(total_instances, precisions)]) / sum(total_instances)))
-	print('mAP: {:.4f}'.format(sum(precisions) / sum(x > 0 for x in total_instances)))
+        mAP = sum(precisions) / sum(x > 0 for x in total_instances)
+	print('mAP: {:.4f}'.format(mAP))
+        
+        if eval_epoch is not None and os.environ.get('COMET_API_KEY') and os.environ.get('PREV_EXPERIMENT'):
+            exp = ExistingExperiment(previous_experimen=)
+            exp.log_metric('eval_mAP', mAP, epoch=eval_epoch)
 
 
 def evaluate(
@@ -175,7 +183,8 @@ def evaluate(
 	iou_threshold=0.5,
 	score_threshold=0.05,
 	max_detections=100,
-	save_path=None
+	save_path=None,
+        eval_epoch=None
 ):
 	""" Evaluate a given dataset using a given model.
 	# Arguments
@@ -258,4 +267,4 @@ def evaluate(
 
 		inference_time = np.sum(all_inferences) / generator.size()
 
-	print_results(generator, average_precisions, inference_time)
+	print_results(generator, average_precisions, inference_time, eval_epoch)

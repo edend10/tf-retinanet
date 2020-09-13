@@ -79,6 +79,7 @@ def parse_args(args):
         parser.add_argument('--iou-threshold',   help='IoU Threshold to count for a positive detection (defaults to 0.5).',  type=float)
         parser.add_argument('--max-detections',  help='Max Detections per image (defaults to 100).',                         type=int)
         parser.add_argument('--save-path',       help='Path for saving images with detections (doesn\'t work for COCO).',    default=None, type=str)
+        parser.add_argument('--eval-epoch',  help='current eval epoch',                         type=int)
 
         # Additional config.
         parser.add_argument('-o', help='Additional config.',action='append', nargs=1)
@@ -149,7 +150,8 @@ def main(args=None):
                         iou_threshold=config["evaluate"]["iou_threshold"],
                         score_threshold=config["evaluate"]["score_threshold"],
                         max_detections=config["evaluate"]["max_detections"],
-                        save_path=args.save_path
+                        save_path=args.save_path,
+                        eval_epoch=args.eval_epoch
                 )
 
 
