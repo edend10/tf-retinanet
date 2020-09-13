@@ -172,8 +172,8 @@ def print_results(generator, average_precisions, inference_time, eval_epoch):
         mAP = sum(precisions) / sum(x > 0 for x in total_instances)
 	print('mAP: {:.4f}'.format(mAP))
         
-        if eval_epoch is not None and os.environ.get('COMET_API_KEY') and os.environ.get('PREV_EXPERIMENT'):
-            exp = ExistingExperiment(previous_experimen=)
+        if eval_epoch is not None and os.environ.get('COMET_API_KEY') and os.environ.get('COMET_EXPERIMENT_KEY'):
+            exp = ExistingExperiment()
             exp.log_metric('eval_mAP', mAP, epoch=eval_epoch)
 
 

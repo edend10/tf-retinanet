@@ -266,11 +266,18 @@ def main(args=None):
     if os.environ.get('COMET_API_KEY') is not None:
 
     comet_api_key = args.comet_api_key or os.environ.get('COMET_API_KEY'))
+
     if comet_api_key and args.comet_ws:
         experiment = Experiment(api_key=comet_api_key,
             project_name="lool-ocr-object-detection", workspace=args.comet_ws)
+
+        exp_key = experiment.get_key()
+        with open('/tmp/comet_exp_key.txt', 'w') as f:
+            f.write(exp_key)
+
         if args.comet_tags is not None:
             experiment.add_tags(args.comet_tags)
+
     else:
         print('no comet args')
 
