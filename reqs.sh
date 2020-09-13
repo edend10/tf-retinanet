@@ -9,7 +9,7 @@ PY_CMD=${ENV_BIN_DIR}/python
 
 $CONDA_CMD init
 
-$CONDA_CMD -n $ENV_NAME python=3.6 pip -y
+$CONDA_CMD create -n $ENV_NAME python=3.6 pip -y
 $CONDA_CMD install -n $ENV_NAME cudnn=7.6 -y
 
 $PIP_CMD install pillow
