@@ -1,0 +1,24 @@
+backbone:
+  name: resnet
+  details:
+    type: resnet50
+    weights: imagenet
+    freeze: true
+
+callbacks:
+  snapshots_path: results/ds2/snapshots_train
+  project_name: tf_retinanet
+  lr_scheduler: False
+  optimizer: nadam
+
+evaluate:
+  weights: results/ds2/saved_models/1
+
+generator:
+  name: csv
+  details:
+     transform_generator: basic
+     train_annotations_path: datasets/ds2/train_annotations.csv
+     train_classes_path: datasets/ds2/classes.csv
+     test_annotations_path: datasets/ds2/test_annotations.csv
+     test_classes_path: datasets/ds2/classes.csv
