@@ -171,7 +171,7 @@ def print_results(generator, average_precisions, inference_time, eval_epoch, exp
     print('mAP: {:.4f}'.format(mAP))
         
     if experiment and eval_epoch is not None:
-        exp.log_metric('eval_mAP', mAP, epoch=eval_epoch)
+        experiment.log_metric('eval_mAP', mAP, epoch=eval_epoch)
 
 
 def evaluate(
